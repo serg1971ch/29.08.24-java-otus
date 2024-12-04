@@ -8,6 +8,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 @Log
@@ -26,10 +27,9 @@ public class AnnotationProcessor {
         } catch (NotFoundExeptions | SQLException e) {
             e.printStackTrace();
         }
-
     }
 
-    public String readSQLFile(String filepath)  {
+    public String readSQLFile(String filepath) {
         StringBuilder sqlBuilder = new StringBuilder();
         try (BufferedReader br = new BufferedReader(new FileReader(filepath))) {
             String line;
@@ -45,33 +45,36 @@ public class AnnotationProcessor {
         return sqlBuilder.toString();
     }
 
-    public static String createTableStatement(Class<?> clazz) {
+    public String createChangeNameColumnStatementAnnotation(Class<?> clazz) {
+        StringBuilder sql = null;
         if (clazz.isAnnotationPresent(MyTable.class)) {
             MyTable myTable = clazz.getAnnotation(MyTable.class);
-            StringBuilder sql = new StringBuilder("CREATE TABLE " + myTable.name() + " (");
+            sql = new StringBuilder("ALTER TABLE " + myTable.name() + " RENAME COLUMN ");
+            log.info("ALTER TABLE " + myTable.name() + " RENAME COLUMN ");
             Field[] fields = clazz.getDeclaredFields();
-            for (Field field : fields) {
-                if (field.isAnnotationPresent(MyField.class)) {
-                    MyField myField = field.getAnnotation(MyField.class);
-                    sql.append(myField.name()).append(" ").append(getSQLType(field)).append(", ");
-                }
+            sql.append(fields[1].getName()).append(" TO ");
+            if (fields[1].isAnnotationPresent(MyField.class)) {
+                MyField myField1 = fields[1].getAnnotation(MyField.class);
+                sql.append(myField1.name()).append(" ;");
+                log.info("SQL " + sql);
             }
-            if (sql.length() > 0) {
-                sql.setLength(sql.length() - 2); // Удаляем последнюю запятую
+            sql.append("ALTER TABLE ").append(myTable.name()).append(" RENAME COLUMN ").append(fields[2].getName()).append(" TO ");
+            if (fields[2].isAnnotationPresent(MyField.class)) {
+                MyField myField2 = fields[2].getAnnotation(MyField.class);
+                sql.append(myField2.name()).append(" ;");
+                log.info("SQL " + sql);
             }
-            sql.append(");");
-            return sql.toString();
         }
-        return null;
+        return sql.toString();
     }
 
-    private static String getSQLType(Field field) {
-        String typeName = field.getType().getSimpleName();
-        switch (typeName) {
-            case "int": return "INTEGER";
-            case "String": return "VARCHAR(255)";
-            case "double": return "DOUBLE";
-            default: return "VARCHAR(255)";
+    public void executeSQL() {
+        String changeColumnQuery = createChangeNameColumnStatementAnnotation(Product.class);
+        try (PreparedStatement stmt = connection.prepareStatement(changeColumnQuery)) {
+            stmt.execute();
+        } catch (ExeptionJDBC | SQLException e) {
+            e.printStackTrace();
         }
     }
 }
+

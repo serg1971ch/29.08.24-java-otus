@@ -2,9 +2,9 @@ package ru.otus;
 @MyTable(name = "products")
 public class Product {
     private int id;
-    @MyField(name = "title")
+    @MyField(name = "titles")
     private String title;
-    @MyField(name = "price")
+    @MyField(name = "prices")
     private double price;
 
     public Product(int id, String title, double price) {
