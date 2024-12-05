@@ -2,15 +2,20 @@ package ru.otus;
 
 import ru.otus.annotations.*;
 
-@RepositoryTable(title = "products")
+
 @MyTable(name = "products")
 public class Product {
-    @RepositoryIdField
+
     private int id;
-    @RepositoryField
+
     @MyField(name = "titles")
     private String title;
-    @RepositoryField
+
+    public Product(String title, double price) {
+        this.title = title;
+        this.price = price;
+    }
+
     @MyField(name = "prices")
     private double price;
 

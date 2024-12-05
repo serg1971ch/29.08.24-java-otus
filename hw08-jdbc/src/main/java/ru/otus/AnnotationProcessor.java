@@ -26,7 +26,9 @@ public class AnnotationProcessor {
     public void createTableProduct(String filepath) {
         String sql = readSQLFile(filepath);
         try {
-            connection.createStatement().execute(sql);
+            if(connection == null) {
+                connection.createStatement().execute(sql);
+            }
         } catch (SQLException e) {
             throw new NotFoundExeptions("Error inserting product: " + e.getMessage());
         }

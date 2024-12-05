@@ -5,6 +5,7 @@ import ru.otus.exeptions.NotFoundExeptions;
 import ru.otus.repository.AbstractRepository;
 
 import java.sql.SQLException;
+import java.util.List;
 
 public class ProductService {
     private final AbstractRepository<Product> productRepository;
@@ -13,7 +14,7 @@ public class ProductService {
         this.productRepository = productRepository;
     }
 
-    public void createProduct(Product product) {
+    public void createProduct(Product product) throws SQLException {
         productRepository.create(product);
     }
 
@@ -29,7 +30,7 @@ public class ProductService {
         productRepository.findById(product);
     }
 
-    public void findByAll() {
-        productRepository.getAllProducts();
+    public List<Product> findByAll() {
+        return  productRepository.getAllProducts();
     }
 }
