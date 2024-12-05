@@ -1,4 +1,4 @@
-package ru.otus;
+package ru.otus.annotations;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

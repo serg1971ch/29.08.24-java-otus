@@ -1,9 +1,16 @@
 package ru.otus;
+
+import ru.otus.annotations.*;
+
+@RepositoryTable(title = "products")
 @MyTable(name = "products")
 public class Product {
+    @RepositoryIdField
     private int id;
+    @RepositoryField
     @MyField(name = "titles")
     private String title;
+    @RepositoryField
     @MyField(name = "prices")
     private double price;
 
@@ -36,5 +43,13 @@ public class Product {
 
     public void setPrice(double price) {
         this.price = price;
+    }
+
+    @Override
+    public String toString() {
+        return "Product: " +
+                "id = " + id +
+                ", title='" + title + '\'' +
+                ", price=" + price;
     }
 }

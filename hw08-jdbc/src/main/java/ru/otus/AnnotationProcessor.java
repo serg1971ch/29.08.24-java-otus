@@ -1,6 +1,9 @@
 package ru.otus;
 
 import lombok.extern.java.Log;
+import ru.otus.annotations.MyField;
+import ru.otus.annotations.MyTable;
+import ru.otus.exeptions.NotFoundExeptions;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -24,8 +27,8 @@ public class AnnotationProcessor {
         String sql = readSQLFile(filepath);
         try {
             connection.createStatement().execute(sql);
-        } catch (NotFoundExeptions | SQLException e) {
-            e.printStackTrace();
+        } catch (SQLException e) {
+            throw new NotFoundExeptions("Error inserting product: " + e.getMessage());
         }
     }
 
@@ -75,6 +78,10 @@ public class AnnotationProcessor {
         } catch (ExeptionJDBC | SQLException e) {
             e.printStackTrace();
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 }
 
