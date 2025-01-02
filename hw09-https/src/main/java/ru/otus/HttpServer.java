@@ -1,5 +1,7 @@
 package ru.otus;
 
+import lombok.Getter;
+import lombok.Setter;
 import lombok.extern.java.Log;
 
 import java.io.*;
@@ -8,12 +10,15 @@ import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+@Getter
+@Setter
 @Log
 public class HttpServer {
     private final ServerConfig config;
     private final ExecutorService executor;
     private boolean running = true;
-
+    private static final int MAX_BUFFER_SIZE = 5 * 1024 * 1024; // 5 MB
+    private static final ThreadLocal<char[]> buffer = ThreadLocal.withInitial(() -> new char[MAX_BUFFER_SIZE]);
 
     public HttpServer(ServerConfig config) {
         this.config = config;
@@ -66,7 +71,7 @@ public class HttpServer {
         }
     }
 
-    private HttpRequest parseRequest(BufferedReader reader) throws IOException{
+    private HttpRequest parseRequest(BufferedReader reader) throws IOException {
         HttpRequest request = HttpRequestParser.parseRequest(reader);
         log.info("Received request: " + request.method + " " + request.uri);
         return request;

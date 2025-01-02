@@ -2,29 +2,41 @@ package ru.otus;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 
+
 public class HttpRequestParser { //Выделил парсер в отдельный класс
 
-    public static HttpRequest parseRequest(BufferedReader reader) throws IOException {
+    private static final ThreadLocal<char[]> buffer = ThreadLocal.withInitial(() -> new char[8192]); // Example size
+
+    public static HttpRequest parseRequest(InputStream inputStream) throws IOException {
         String line;
-        StringBuilder requestLine = new StringBuilder();
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
         Map<String, String> headers = new HashMap<>();
-        Map<String, String> params = new HashMap<>();
         StringBuilder body = new StringBuilder();
 
-        // Читаем первую строку (метод, URI, версия HTTP)
         if ((line = reader.readLine()) == null) {
-            return null; // Неверный запрос
+            return null;
         }
-        requestLine.append(line);
 
-        // Читаем заголовки
+        int firstSpaceIndex = line.indexOf(' ');
+        int secondSpaceIndex = line.indexOf(' ', firstSpaceIndex + 1);
+
+        if (firstSpaceIndex == -1 || secondSpaceIndex == -1) {
+            return null;
+        }
+
+        String method = line.substring(0, firstSpaceIndex);
+        String uri = line.substring(firstSpaceIndex + 1, secondSpaceIndex);
+
         while (!(line = reader.readLine()).isEmpty()) {
             int colonIndex = line.indexOf(':');
             if (colonIndex == -1) {
-                // Неверный заголовок
+                // Invalid header
                 return null;
             }
             String headerName = line.substring(0, colonIndex).trim();
@@ -32,38 +44,16 @@ public class HttpRequestParser { //Выделил парсер в отдельн
             headers.put(headerName, headerValue);
         }
 
-        // Извлекаем метод и URI из первой строки
-        String[] requestLineParts = requestLine.toString().split(" ");
-        if (requestLineParts.length != 3) {
-            return null; // Неверный формат первой строки
-        }
-        String method = requestLineParts[0];
-        String uri = requestLineParts[1];
-
-
-        // Извлекаем параметры из URI (простой парсинг)
-        int questionMarkIndex = uri.indexOf('?');
-        if (questionMarkIndex != -1) {
-            String queryString = uri.substring(questionMarkIndex + 1);
-            String[] paramsArray = queryString.split("&");
-            for (String param : paramsArray) {
-                String[] keyValue = param.split("=");
-                if (keyValue.length == 2) {
-                    params.put(keyValue[0], keyValue[1]);
-                }
-            }
-            uri = uri.substring(0, questionMarkIndex); // Убираем параметры из URI
-        }
-
-
-        // Читаем тело запроса (если есть) - это упрощенное чтение, для больших тел нужно использовать потоки
-        if(headers.containsKey("Content-Length")){
+        if (headers.containsKey("Content-Length")) {
             int contentLength = Integer.parseInt(headers.get("Content-Length"));
-            char[] buffer = new char[contentLength];
-            reader.read(buffer, 0, contentLength);
-            body.append(buffer);
+            char[] readBuffer = buffer.get();
+            if (readBuffer.length < contentLength) {
+                readBuffer = new char[contentLength];
+                buffer.set(readBuffer);
+            }
+            reader.read(readBuffer, 0, contentLength);
+            body.append(readBuffer, 0, contentLength);
         }
-
-        return new HttpRequest(method, uri, headers, params);
+        return new HttpRequest(method, uri, headers, body.toString());
     }
 }
