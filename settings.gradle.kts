@@ -20,3 +20,11 @@ pluginManagement {
     }
 }
 include("hw02-annotations")
+include("hw03-testing")
+include("hw04-streams")
+include("hw05-threads")
+include("hw06-iterator")
+include("hw07-proxy")
+include("hw08-jdbc")
+include("hw09-https")
+include("hw10-webServer")

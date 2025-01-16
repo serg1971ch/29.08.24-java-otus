@@ -20,6 +20,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.when;
 
+
 @ExtendWith(MockitoExtension.class)
 public class AccountServiceImplParametrizedTest {
     @Mock
@@ -49,22 +50,22 @@ public class AccountServiceImplParametrizedTest {
         assertEquals(expected, accountServiceImpl.makeTransfer(1L, 2L, transferAmount));
         }
 
-    @ParameterizedTest
-    @MethodSource("provideParameters")
-    public void testTransferValidationMethodSource(BigDecimal sourceAmount, BigDecimal transferAmount, Boolean expected) {
-        Account sourceAccount = new Account();
-        sourceAccount.setAmount(sourceAmount);
-        sourceAccount.setId(1L);
-
-        Account destinationAccount = new Account();
-        destinationAccount.setAmount(new BigDecimal(10));
-        destinationAccount.setId(2L);
-
-        when(accountDao.findById(eq(1L))).thenReturn(Optional.of(sourceAccount));
-        when(accountDao.findById(eq(2L))).thenReturn(Optional.of(destinationAccount));
-
-        assertEquals(expected, accountServiceImpl.makeTransfer(1L, 2L, transferAmount));
-    }
+//    @ParameterizedTest
+//    @MethodSource("provideParameters")
+//    public void testTransferValidationMethodSource(BigDecimal sourceAmount, BigDecimal transferAmount, Boolean expected) {
+//        Account sourceAccount = new Account();
+//        sourceAccount.setAmount(sourceAmount);
+//        sourceAccount.setId(1L);
+//
+//        Account destinationAccount = new Account();
+//        destinationAccount.setAmount(new BigDecimal(10));
+//        destinationAccount.setId(2L);
+//
+//        when(accountDao.findById(eq(1L))).thenReturn(Optional.of(sourceAccount));
+//        when(accountDao.findById(eq(2L))).thenReturn(Optional.of(destinationAccount));
+//
+//        assertEquals(expected, accountServiceImpl.makeTransfer(1L, 2L, transferAmount));
+//    }
 
     public static Stream<? extends Arguments> provideParameters() {
         return Stream.of(

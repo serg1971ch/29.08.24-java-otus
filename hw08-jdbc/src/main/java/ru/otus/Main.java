@@ -31,7 +31,7 @@ public class Main {
         service.createProduct(new Product(3, "Potato", 52));
         service.createProduct(new Product(4,"Sausage", 152));
         service.createProduct(new Product(5,"Fish", 230));
-        
+
         List<Product> products =  service.findByAll();
         System.out.println(products);
 

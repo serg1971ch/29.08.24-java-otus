@@ -37,6 +37,4 @@ public class AccountDao {
     public Iterable<Account> findAll() {
         return accountMap.values();
     }
-
-
 }
