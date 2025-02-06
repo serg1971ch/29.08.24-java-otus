@@ -7,12 +7,12 @@ import java.util.Scanner;
 
 @NoArgsConstructor(force = true)
 public class ServiceGrocery {
-    private final ServiceCart serviceCart;
+    private  ServiceCart serviceCart;
     private final ProductRepository productRepository;
     Scanner scanner = new Scanner(System.in);
 
-    public ServiceGrocery(ServiceCart serviceCart, ProductRepository productRepository) {
-        this.serviceCart = serviceCart;
+    public ServiceGrocery(ProductRepository productRepository) {
+        this.serviceCart = new ServiceCartImpl();
         this.productRepository = productRepository;
     }
 
@@ -26,7 +26,7 @@ public class ServiceGrocery {
             System.out.println("5. Выход");
 
             System.out.print("Введите номер команды: ");
-            int command = scanner.nextInt();
+            int command = Integer.parseInt(scanner.nextLine().trim());
 
             switch (command) {
                 case 1:

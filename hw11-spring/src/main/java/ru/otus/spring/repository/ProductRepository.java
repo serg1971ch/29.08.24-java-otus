@@ -28,8 +28,8 @@ public class ProductRepository {
         products.add(new Product(10, "Sausages", 149.99));
     }
 
-    public void getAllProducts() {
-        products.forEach(System.out::println);
+    public List<Product> getAllProducts() {
+         return products;
     }
 
     public Product getProductById(int id) {

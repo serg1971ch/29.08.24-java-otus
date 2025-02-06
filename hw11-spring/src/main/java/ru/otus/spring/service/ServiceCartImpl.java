@@ -10,13 +10,17 @@ import java.util.logging.Logger;
 
 //При каждом запросе корзины из контекста, должна создаваться новая корзина.
 public class ServiceCartImpl implements ServiceCart {
-    private final ProductRepository productRepository;
-    private final List<Product> items;
+    private ProductRepository productRepository;
+    private List<Product> items;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ServiceCartImpl(ProductRepository productRepository) {
-        this.productRepository = productRepository;
+        this.productRepository = new ProductRepository();
         items = new ArrayList<>();
+    }
+
+    public  ServiceCartImpl() {
+
     }
 
     public void addProduct(Integer productId) {
