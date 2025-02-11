@@ -1,25 +1,27 @@
 package ru.otus.spring.service;
 
+import org.springframework.stereotype.Service;
 import ru.otus.spring.model.Product;
 import ru.otus.spring.repository.ProductRepository;
+import ru.otus.spring.service.ServiceCart;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
 
-//При каждом запросе корзины из контекста, должна создаваться новая корзина.
+@Service
 public class ServiceCartImpl implements ServiceCart {
     private ProductRepository productRepository;
     private List<Product> items;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
     public ServiceCartImpl(ProductRepository productRepository) {
-        this.productRepository = new ProductRepository();
+        this.productRepository = productRepository;
         items = new ArrayList<>();
     }
 
-    public  ServiceCartImpl() {
+    public ServiceCartImpl() {
 
     }
 
@@ -29,6 +31,7 @@ public class ServiceCartImpl implements ServiceCart {
         items.add(product);
         System.out.println(product.getName() + " добавлен в корзину.");
     }
+
 
     public void removeProduct(Integer id) {
         Product removedProduct = productRepository.getProductById(id);

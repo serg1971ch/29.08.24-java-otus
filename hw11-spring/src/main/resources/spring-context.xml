@@ -4,9 +4,12 @@
        xsi:schemaLocation="http://www.springframework.org/schema/beans
         http://www.springframework.org/schema/beans/spring-beans.xsd">
 
-    <bean id = 'repo' class="ru.otus.spring.repository.ProductRepository">
+    <bean id = 'repo' scope="prototype" class="ru.otus.spring.repository.ProductRepository">
+    </bean>
+    <bean id = 'product' class="ru.otus.spring.service.ServiceCartImpl">
+        <constructor-arg ref="repo"/>
     </bean>
     <bean id = "grocery" class="ru.otus.spring.service.ServiceGrocery">
-        <constructor-arg ref="repo"/>
+        <constructor-arg ref="product"/>
     </bean>
 </beans>

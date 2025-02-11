@@ -1,8 +1,6 @@
 package ru.otus.spring.repository;
 
-
 import ru.otus.spring.model.Product;
-
 import java.util.ArrayList;
 import java.util.List;
 
