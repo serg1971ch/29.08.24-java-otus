@@ -1,35 +1,30 @@
-package ru.otus.spring.service;
+package ru.otus.springContex.service;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import ru.otus.spring.model.Product;
-import ru.otus.spring.repository.ProductRepository;
-import ru.otus.spring.service.ServiceCart;
+import ru.otus.springContex.model.Product;
+import ru.otus.springContex.repository.ProductRepository;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 
-
 @Service
 public class ServiceCartImpl implements ServiceCart {
-    private ProductRepository productRepository;
+    private final ProductRepository productRepository;
     private List<Product> items;
     Logger logger = Logger.getLogger(this.getClass().getName());
 
+    @Autowired
     public ServiceCartImpl(ProductRepository productRepository) {
         this.productRepository = productRepository;
         items = new ArrayList<>();
     }
 
-    public ServiceCartImpl() {
-
-    }
-
     public void addProduct(Integer productId) {
         Product product = productRepository.getProductById(productId);
-        logger.info("Adding product " + product.getName());
         items.add(product);
-        System.out.println(product.getName() + " добавлен в корзину.");
+        logger.info("Adding product " + product.getName());
     }
 
 
@@ -50,5 +45,11 @@ public class ServiceCartImpl implements ServiceCart {
             System.out.println("Товары в корзине:");
             items.forEach(System.out::println);
         }
+    }
+
+    @Override
+    public List<Product> getProducts() {
+        List<Product> products = productRepository.getProducts();
+        return products.stream().toList();
     }
 }

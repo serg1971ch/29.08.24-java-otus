@@ -1,15 +1,19 @@
-package ru.otus.spring.repository;
+package ru.otus.springContex.repository;
 
-import ru.otus.spring.model.Product;
+
+import lombok.Getter;
+import org.springframework.stereotype.Repository;
+import ru.otus.springContex.model.Product;
+
 import java.util.ArrayList;
 import java.util.List;
 
-//ProductRepository должен позволять получить весь список или один товар по id.
+@Getter
+@Repository
 public class ProductRepository {
-    private List<Product> products;
+    private final List<Product> products = new ArrayList<>();
 
     public ProductRepository() {
-        products = new ArrayList<>();
         initializeProducts();
     }
 
@@ -26,14 +30,21 @@ public class ProductRepository {
         products.add(new Product(10, "Sausages", 149.99));
     }
 
-    public List<Product> getAllProducts() {
-         return products;
-    }
-
     public Product getProductById(int id) {
         return products.stream()
                 .filter(product -> product.getId() == id)
                 .findFirst()
                 .orElse(null);
+    }
+
+    public List<Product> getProducts() {
+        return products.stream().toList();
+    }
+
+    @Override
+    public String toString() {
+        return "ProductRepository{" +
+                "products =" + getProducts() +
+                '}';
     }
 }

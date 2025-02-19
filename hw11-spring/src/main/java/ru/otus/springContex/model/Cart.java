@@ -1,7 +1,6 @@
-package ru.otus.spring.model;
+package ru.otus.springContex.model;
 
 import lombok.Data;
-import ru.otus.spring.model.Product;
 
 @Data
 public class Cart {
