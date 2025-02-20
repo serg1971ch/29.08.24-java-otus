@@ -1,6 +1,7 @@
 package ru.otus.springContex.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 import ru.otus.springContex.model.Product;
 import ru.otus.springContex.repository.ProductRepository;
@@ -10,6 +11,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 @Service
+@Scope("prototype")
 public class ServiceCartImpl implements ServiceCart {
     private final ProductRepository productRepository;
     private List<Product> items;
