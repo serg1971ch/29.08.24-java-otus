@@ -1,0 +1,20 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/productDB
+    username: postgres
+    password: 1234
+
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: update
+
+  liquibase:
+    change-log: classpath:/liquibase/changelog-master.yml
+
+logging:
+  level:
+    ROOT: INFO
+
+
