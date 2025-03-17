@@ -1,5 +1,6 @@
 package ru.otus.dataJdbc.controllers;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import ru.otus.dataJdbc.dtos.PageDtoPagination;
 import ru.otus.dataJdbc.entities.Book;
 import ru.otus.dataJdbc.repositories.BookRepository;
 import ru.otus.dataJdbc.services.PageService;
+import ru.otus.dataJdbc.services.PageServiceImpl;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +22,7 @@ import java.util.function.Function;
 @RequestMapping("/api/v1/books/")
 public class BookDtoController {
     private final PageService service;
-    List<CommentBookDto> comments;
+    private List<CommentBookDto> comments;
     private final BookRepository bookRepository;
 
     private static final Function<Book, BookDto> MAP_TO_DTO_FUNCTION = cb -> new BookDto(cb.getId(), cb.getTitle());
